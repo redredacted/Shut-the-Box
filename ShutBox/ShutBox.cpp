@@ -1,6 +1,6 @@
 #include "ShutBox.h"
 
-ShutBox::ShutBox(std::function<void(std::array<bool, 9>& brd)> cbPrintBrd, std::function<bool(std::array<bool, 9>& brd, int diceVal)>& cbGetInput) : board{true, true, true, true, true, true, true, true, true}
+ShutBox::ShutBox(ShutOutFn& cbPrintBrd, ShutInFn& cbGetInput) : board{true, true, true, true, true, true, true, true, true}
 {
 	cb_printBoardState = cbPrintBrd;
 	cb_GetInput = cbGetInput;

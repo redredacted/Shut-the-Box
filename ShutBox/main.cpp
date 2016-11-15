@@ -30,8 +30,8 @@ bool getInput(std::array<bool, 9>& brd, int diceVal)
 
 int main()
 {
-	std::function<void(std::array<bool, 9>&)> pb = printBoard;
-	std::function<bool(std::array<bool, 9>&, int)> gi = getInput;
+	ShutOutFn pb = printBoard;
+	ShutInFn gi = getInput;
 	ShutBox round1(pb, gi);
 	round1.Start();
 
