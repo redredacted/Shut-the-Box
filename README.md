@@ -1,2 +1,2 @@
 # Shut-the-Box
-## Currently Incopmplete
+## Currently Incomplete
