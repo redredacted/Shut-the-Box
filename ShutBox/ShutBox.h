@@ -3,7 +3,8 @@
 #include <functional>
 
 typedef std::function<void(std::array<bool, 9>& brd)> ShutOutFn;
-typedef std::function<bool(std::array<bool, 9>& brd, int diceVal)> ShutInFn;
+typedef std::function<void(std::array<bool, 9>& brd, int diceVal)> ShutInFn;
+typedef std::array<bool, 9> ShutBoard;
 
 class ShutBox
 {
@@ -12,7 +13,7 @@ public:
 	~ShutBox();
 	int Start();
 private:
-	std::array<bool, 9> board;
+	ShutBoard board;
 	ShutOutFn cb_printBoardState;
 	ShutInFn cb_GetInput;
 	bool shouldContinue();

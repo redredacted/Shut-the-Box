@@ -12,11 +12,11 @@ ShutBox::~ShutBox()
 
 int ShutBox::Start()
 {
+	ShutBoard temp = board;
 	while (shouldContinue())
 	{
-		cb_printBoardState(board);
-		cb_GetInput(board, 6);
-		//system("pause");
+		cb_printBoardState(temp);
+		cb_GetInput(temp, 6);
 		system("cls");
 	}
 
@@ -25,5 +25,6 @@ int ShutBox::Start()
 
 bool ShutBox::shouldContinue()
 {
+
 	return true;
 }
