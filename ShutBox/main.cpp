@@ -29,6 +29,8 @@ void getInput(ShutBoard& brd, int diceVal)
 	{
 		while (true)
 		{
+			//debug on next line
+			std::cout << "diceVal is " << diceVal << std::endl;
 			std::cout << "Enter a number bewtween 1 and 9: ";
 			std::getline(std::cin, input);
 			std::stringstream strm{ input };
@@ -49,14 +51,32 @@ void getInput(ShutBoard& brd, int diceVal)
 		if (index < 0)
 			break;
 
-		brd.at(index - 1) = !brd.at(index - 1);
+		brd.at(index - 1) = false;
+
+		int total{};
+		ShutNum nums = ShutBox::boardToNum(brd);
+
+		for (size_t i = 0; i < 9; i++)
+		{
+			total += nums.at(i);
+		}
+
+		if (total == diceVal)
+		{
+			//debug on next line
+			std::cout << "diceVal was matched by player" << std::endl;
+			system("pause");
+			break;
+		}
+
+		printBoard(brd);
 	}
 }
 
 int main()
 {
-	ShutOutFn pb = printBoard;
-	ShutInFn gi = getInput;
+	ShutFn pb = printBoard;
+	ShutSetFn gi = getInput;
 	ShutBox round1(pb, gi);
 	round1.Start();
 
