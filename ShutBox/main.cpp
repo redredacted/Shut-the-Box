@@ -40,12 +40,12 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			std::getline(std::cin, input);
 			std::stringstream strm{ input };
 
-			if (strm >> index && index < 10 && index > 0)
+			if (strm >> index && index < 10 && index > 0 && brd.at(index - 1) == true)
 				break;
 
 			if (brd.at(index - 1) == false)
 			{
-				std::cout << "That number has already been set";
+				std::cout << "That number has already been set" << std::endl;
 			}
 			else
 			{
@@ -54,9 +54,6 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			system("pause");
 			printBoard(brd);
 		}
-
-		if (index < 0 && brd.at(index - 1) == false)
-			break;
 
 		idx.push_back(index);
 

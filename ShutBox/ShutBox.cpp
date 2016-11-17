@@ -1,7 +1,6 @@
 #include "ShutBox.h"
 
-ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd) : board{
-	true, true, true, true, true, true, true, true, true }
+ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd) : board{true, true, true, true, true, true, true, true, true}
 {
 	cb_printBoardState = cbPrintBrd;
 	cb_GetInput = cbGetInput;
@@ -39,6 +38,11 @@ int ShutBox::Start()
 	}
 
 	cb_printBoardState(board);
+
+	int score = calcScore();
+	if (score == diceResult)
+		return 0;
+
 	return calcScore();
 }
 
