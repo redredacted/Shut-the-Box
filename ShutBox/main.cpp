@@ -2,6 +2,7 @@
 #include <string>
 #include <sstream>
 #include <functional>
+#include <vector>
 #include "ShutBox.h"
 
 void printBoard(ShutBoard& brd)
@@ -20,16 +21,20 @@ void printBoard(ShutBoard& brd)
 	std::cout << std::endl;
 }
 
-void getInput(ShutBoard& brd, int diceVal)
+ShutNum getInput(ShutBoard& brd, int diceVal)
 {
 	std::string input;
+	ShutNum idx{};
+	idx.reserve(3);
 	int index{};
 
-	for (size_t i = 0; i < 3; i++)
+	while (true)
 	{
+		int i = idx.size();
+
 		while (true)
 		{
-			//debug on next line
+			printBoard(brd);
 			std::cout << "diceVal is " << diceVal << std::endl;
 			std::cout << "Enter a number bewtween 1 and 9: ";
 			std::getline(std::cin, input);
@@ -38,47 +43,42 @@ void getInput(ShutBoard& brd, int diceVal)
 			if (strm >> index && index < 10 && index > 0)
 				break;
 
-			if (i != 0 && index < 0)
-				break;
-
-			system("cls");
-			std::cout << "Input must be bewtween 1 and 9" << std::endl;
+			if (brd.at(index - 1) == false)
+			{
+				std::cout << "That number has already been set";
+			}
+			else
+			{
+				std::cout << "Input must be bewtween 1 and 9" << std::endl;
+			}
 			system("pause");
-			system("cls");
 			printBoard(brd);
 		}
 
-		if (index < 0)
+		if (index < 0 && brd.at(index - 1) == false)
 			break;
 
-		brd.at(index - 1) = false;
+		idx.push_back(index);
 
-		int total{};
-		ShutNum nums = ShutBox::boardToNum(brd);
-
-		for (size_t i = 0; i < 9; i++)
-		{
-			total += nums.at(i);
-		}
-
-		if (total == diceVal)
-		{
-			//debug on next line
-			std::cout << "diceVal was matched by player" << std::endl;
-			system("pause");
+		if (ShutBox::isMatch(idx, diceVal))
 			break;
-		}
-
-		printBoard(brd);
 	}
+	return idx;
+}
+
+void dispRound()
+{
+	std::cout << "diceVal was matched by player" << std::endl;
+	system("pause");
 }
 
 int main()
 {
-	ShutFn pb = printBoard;
-	ShutSetFn gi = getInput;
-	ShutBox round1(pb, gi);
-	round1.Start();
+	DispBrdFn pb = printBoard;
+	InputFn gi = getInput;
+	DispRndFn dr = dispRound;
+	ShutBox round1(pb, gi, dr);
+	std::cout << "You Scored: " << round1.Start() << std::endl;
 
 	system("pause");
 	return 0;

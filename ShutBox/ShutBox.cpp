@@ -1,9 +1,11 @@
 #include "ShutBox.h"
 
-ShutBox::ShutBox(ShutFn& cbPrintBrd, ShutSetFn& cbGetInput) : board{true, true, true, true, true, true, true, true, true}
+ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd) : board{
+	true, true, true, true, true, true, true, true, true }
 {
 	cb_printBoardState = cbPrintBrd;
 	cb_GetInput = cbGetInput;
+	cb_DispRnd = cbDispRnd;
 	rng.seed(std::random_device()());
 }
 
@@ -13,24 +15,34 @@ ShutBox::~ShutBox()
 
 int ShutBox::Start()
 {
-	ShutBoard temp;
-	int dice{};
+	ShutNum input{};
+	input.reserve(3);
 
-	do
+	while (true)
 	{
-		//following line of code does not produce intended functionality
-		dice = rollDice() + rollDice();
-		temp = board;
-		cb_printBoardState(board);
-		cb_GetInput(temp, dice);
-	} while (shouldContinue(boardToNum(temp), dice));
+		rollDice(2);
 
-	//debug
-	std::cout << "There are no combinations of numbers remaining on the board that can add up to " << dice << std::endl;
-	return 0;
+		//cb_printBoardState(board, diceResult);
+		ShutNum input = cb_GetInput(board, diceResult);
+		if (ShutBox::isMatch(input, diceResult))
+		{
+			for (size_t i = 0; i < input.size(); i++)
+			{
+				board.at(input.at(i) - 1) = false;
+			}
+
+			cb_DispRnd();
+		}
+
+		if (!shouldContinue(boardToNum(board, false), diceResult))
+			break;
+	}
+
+	cb_printBoardState(board);
+	return calcScore();
 }
 
-bool ShutBox::shouldContinue(std::array<int, 9>& v, int sum)
+bool ShutBox::shouldContinue(ShutNum& v, int sum)
 {
 	// https://en.wikipedia.org/wiki/Subset_sum_problem
 	// http://www.cs.dartmouth.edu/~ac/Teach/CS105-Winter05/Notes/nanda-scribe-3.pdf
@@ -43,39 +55,79 @@ bool ShutBox::shouldContinue(std::array<int, 9>& v, int sum)
 
 	dp[0] = 1;
 
-	for (int i = 0; i < 9; i++)
+	for (int i = 0; i < v.size(); i++)
 	{
 		for (int j = MAX_ELEMENT*MAX_ELEMENT_VALUE; j >= 0; j--)
 		{
-			if (j - v[i] < 0) continue;
-			if (dp[j - v[i]]) dp[j] = 1;
+			if (j - v.at(i) < 0) continue;
+			if (dp[j - v.at(i)]) dp[j] = 1;
 		}
 	}
 
 	return dp[sum] ? true : false;
 }
 
-ShutNum ShutBox::boardToNum(ShutBoard& brd)
+ShutNum ShutBox::boardToNum(ShutBoard& brd, bool invert)
 {
-	std::array<int, 9> numOut;
+	std::vector<int> numOut;
+	numOut.reserve(9);
 
 	for (size_t i = 0; i < 9; i++)
 	{
-		if (brd.at(i) != true)
+		if (invert)
 		{
-			numOut.at(i) = i + 1;
+			if (brd.at(i) == false)
+				numOut.push_back(i + 1);
 		}
 		else
 		{
-			numOut.at(i) = 0;
+			if (brd.at(i) == true)
+				numOut.push_back(i + 1);
 		}
 	}
 
 	return numOut;
 }
 
-
-int ShutBox::rollDice()
+void ShutBox::rollDice(int diceToRoll)
 {
-	return dist(rng);
+	int tot{};
+
+	for (size_t i = 0; i < diceToRoll; i++)
+	{
+		tot += dist(rng);
+	}
+
+	diceResult = tot;
+}
+
+
+// returns true if the items in the vector add up to diceVal
+bool ShutBox::isMatch(ShutNum& choice, int diceVal)
+{
+	int total{};
+
+	for (size_t i = 0; i < choice.size(); i++)
+	{
+		total += choice.at(i);
+	}
+
+	if (total == diceVal)
+		return true;
+
+	return false;
+}
+
+
+int ShutBox::calcScore()
+{
+	int score{};
+	ShutNum scoreVec = boardToNum(board, false);
+
+	for (size_t i = 0; i < scoreVec.size(); i++)
+	{
+		score += scoreVec.at(i);
+	}
+
+	return score;
 }

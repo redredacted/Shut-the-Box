@@ -1,29 +1,33 @@
 #pragma once
 #include <array>
+#include <vector>
 #include <functional>
 #include <random>
-//debug stuff below
-#include <iostream>
 
-typedef std::function<void(std::array<bool, 9>& brd)> ShutFn;
-typedef std::function<void(std::array<bool, 9>& brd, int diceVal)> ShutSetFn;
 typedef std::array<bool, 9> ShutBoard;
-typedef std::array<int, 9> ShutNum;
+typedef std::vector<int> ShutNum;
+typedef std::function<void(ShutBoard& brd)> DispBrdFn;
+typedef std::function<ShutNum(ShutBoard& brd, int diceVal)> InputFn;
+typedef std::function<void()> DispRndFn;
 
 class ShutBox
 {
 public:
-	ShutBox(ShutFn& cbPrintBrd, ShutSetFn& cbGetInput);
+	ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd);
 	~ShutBox();
 	int Start();
-	static ShutNum boardToNum(ShutBoard& brd);
+	static ShutNum boardToNum(ShutBoard& brd, bool invert);
+	static bool isMatch(ShutNum& choice, int diceVal);
 private:
+	int diceResult;
 	ShutBoard board;
-	ShutFn cb_printBoardState;
-	ShutSetFn cb_GetInput;
-	bool shouldContinue(std::array<int, 9>& v, int sum);
 	std::mt19937 rng;
-	std::uniform_int_distribution<std::mt19937::result_type> dist{1,7};
-	int rollDice();
+	std::uniform_int_distribution<std::mt19937::result_type> dist{ 1,6 };
+	DispBrdFn cb_printBoardState;
+	InputFn cb_GetInput;
+	void rollDice(int diceToRoll);
+	bool shouldContinue(ShutNum& v, int sum);
+	DispRndFn cb_DispRnd;
+	int calcScore();
 };
 
