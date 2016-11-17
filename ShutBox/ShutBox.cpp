@@ -1,10 +1,11 @@
 #include "ShutBox.h"
 
-ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd) : board{true, true, true, true, true, true, true, true, true}
+ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt) : board{true, true, true, true, true, true, true, true, true}
 {
 	cb_printBoardState = cbPrintBrd;
 	cb_GetInput = cbGetInput;
 	cb_DispRnd = cbDispRnd;
+	cb_GetDiceAmt = cbGetDiceAmt;
 	rng.seed(std::random_device()());
 }
 
@@ -19,7 +20,14 @@ int ShutBox::Start()
 
 	while (true)
 	{
-		rollDice(2);
+		if (!board[6] && !board[7] && !board[8])
+		{
+			rollDice(cb_GetDiceAmt());
+		}
+		else
+		{
+			rollDice(2);
+		}
 
 		//cb_printBoardState(board, diceResult);
 		ShutNum input = cb_GetInput(board, diceResult);
@@ -33,7 +41,7 @@ int ShutBox::Start()
 			cb_DispRnd();
 		}
 
-		if (!shouldContinue(boardToNum(board, false), diceResult))
+		if (!shouldContinue(boardToNum(board, false), diceResult) || (board[0] == false && diceResult == 1) || (board[1] == false && diceResult == 2))
 			break;
 	}
 
@@ -41,7 +49,7 @@ int ShutBox::Start()
 
 	int score = calcScore();
 	if (score == diceResult)
-		return 0;
+		score = 0;
 
 	return score;
 }
