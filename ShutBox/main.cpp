@@ -3,6 +3,7 @@
 #include <sstream>
 #include <functional>
 #include <vector>
+#include <algorithm>
 #include "ShutBox.h"
 
 void printBoard(ShutBoard& brd)
@@ -40,10 +41,11 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			std::getline(std::cin, input);
 			std::stringstream strm{ input };
 
-			if (strm >> index && index < 10 && index > 0 && brd.at(index - 1) == true)
+			if (strm >> index && index < 10 && index > 0 && brd.at(index - 1) == true && !(std::find(idx.begin(), idx.end(), index) != idx.end()))
 				break;
 
-			if (brd.at(index - 1) == false)
+			// thing after && returns true if value of index is in vector idx
+			if (brd.at(index - 1) == false || std::find(idx.begin(), idx.end(), static_cast<int>(index)) != idx.end())
 			{
 				std::cout << "That number has already been set" << std::endl;
 			}
@@ -52,7 +54,6 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 				std::cout << "Input must be bewtween 1 and 9" << std::endl;
 			}
 			system("pause");
-			printBoard(brd);
 		}
 
 		idx.push_back(index);

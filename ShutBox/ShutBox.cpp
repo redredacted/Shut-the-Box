@@ -43,7 +43,7 @@ int ShutBox::Start()
 	if (score == diceResult)
 		return 0;
 
-	return calcScore();
+	return score;
 }
 
 bool ShutBox::shouldContinue(ShutNum& v, int sum)
