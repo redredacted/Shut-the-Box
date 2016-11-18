@@ -10,11 +10,12 @@ typedef std::function<void(ShutBoard& brd)> DispBrdFn;
 typedef std::function<ShutNum(ShutBoard& brd, int diceVal)> InputFn;
 typedef std::function<void()> DispRndFn;
 typedef std::function<int()> GetDiceAmt;
+typedef std::function<void(int)> UpdateDice;
 
 class ShutBox
 {
 public:
-	ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt);
+	ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt, UpdateDice& cbDiceUpdate);
 	~ShutBox();
 	int Start();
 	static ShutNum boardToNum(ShutBoard& brd, bool invert);
@@ -28,6 +29,7 @@ private:
 	InputFn cb_GetInput;
 	DispRndFn cb_DispRnd;
 	GetDiceAmt cb_GetDiceAmt;
+	UpdateDice cb_DiceUpdate;
 	void rollDice(int diceToRoll);
 	bool shouldContinue(ShutNum& v, int sum);
 	int calcScore();

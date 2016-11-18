@@ -6,6 +6,11 @@
 #include <algorithm>
 #include "ShutBox.h"
 
+void dicePrint(int diceVal)
+{
+	std::cout << "diceVal is " << diceVal << std::endl;
+}
+
 void printBoard(ShutBoard& brd)
 {
 	for (size_t i = 0; i < 9; i++)
@@ -27,7 +32,9 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 	std::string input;
 	ShutNum idx{};
 	idx.reserve(3);
+	ShutBoard tmp = brd;
 	int index{};
+
 
 	while (true)
 	{
@@ -35,8 +42,6 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 
 		while (true)
 		{
-			printBoard(brd);
-			std::cout << "diceVal is " << diceVal << std::endl;
 			std::cout << "Enter a number bewtween 1 and 9: ";
 			std::getline(std::cin, input);
 			std::stringstream strm{ input };
@@ -62,12 +67,35 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			}
 
 			system("pause");
+			printBoard(tmp);
+			dicePrint(diceVal);
 		}
 
 		idx.push_back(index);
+		tmp.at(index - 1) = false;
 
 		if (ShutBox::isMatch(idx, diceVal))
 			break;
+
+		// should probably turn into helper function
+		int total{};
+		for (size_t j = 0; j < idx.size(); j++)
+		{
+			total += idx.at(j);
+		}
+
+		if (total > diceVal)
+		{
+			idx.clear();
+			tmp = brd;
+			std::cout << "You entered a sequence of numbers greater than the value rolled on the dice" << std::endl;
+		}
+		else if (total < diceVal && idx.size() >= 3)
+		{
+			idx.clear();
+			tmp = brd;
+			std::cout << "You entered a sequence of numbers that will add up to a value less than the rolled on the dice" << std::endl;
+		}
 	}
 	return idx;
 }
@@ -106,7 +134,8 @@ int main()
 		InputFn gi = getInput;
 		DispRndFn dr = dispRound;
 		GetDiceAmt di = getAmtOfDiceToRoll;
-		ShutBox round1(pb, gi, dr, di);
+		UpdateDice dp = dicePrint;
+		ShutBox round1(pb, gi, dr, di, dp);
 		std::cout << "You Scored: " << round1.Start() << std::endl;
 	}
 	catch (const std::exception& ex)

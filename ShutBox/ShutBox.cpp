@@ -1,11 +1,12 @@
 #include "ShutBox.h"
 
-ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt) : board{true, true, true, true, true, true, true, true, true}
+ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt, UpdateDice& cbDiceUpdate) : board{true, true, true, true, true, true, true, true, true}
 {
 	cb_printBoardState = cbPrintBrd;
 	cb_GetInput = cbGetInput;
 	cb_DispRnd = cbDispRnd;
 	cb_GetDiceAmt = cbGetDiceAmt;
+	cb_DiceUpdate = cbDiceUpdate;
 	rng.seed(std::random_device()());
 }
 
@@ -20,6 +21,8 @@ int ShutBox::Start()
 
 	while (true)
 	{
+		cb_printBoardState(board);
+
 		if (!board[6] && !board[7] && !board[8])
 		{
 			rollDice(cb_GetDiceAmt());
@@ -29,7 +32,17 @@ int ShutBox::Start()
 			rollDice(2);
 		}
 
-		//cb_printBoardState(board, diceResult);
+		cb_DiceUpdate(diceResult);
+
+		if ((!board[0] && diceResult == 1) || (!board[1] && diceResult == 2))
+			break;
+
+		if (!shouldContinue(boardToNum(board, false), diceResult))
+			break;
+
+		if (calcScore() < diceResult)
+			break;
+
 		ShutNum input = cb_GetInput(board, diceResult);
 		if (ShutBox::isMatch(input, diceResult))
 		{
@@ -40,12 +53,7 @@ int ShutBox::Start()
 
 			cb_DispRnd();
 		}
-
-		if (!shouldContinue(boardToNum(board, false), diceResult) || (board[0] == false && diceResult == 1) || (board[1] == false && diceResult == 2))
-			break;
 	}
-
-	cb_printBoardState(board);
 
 	int score = calcScore();
 	if (score == diceResult)
