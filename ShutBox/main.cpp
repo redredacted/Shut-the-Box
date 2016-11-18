@@ -73,12 +73,12 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 
 		idx.push_back(index);
 		tmp.at(index - 1) = false;
-		printBoard(tmp);
 
 		if (ShutBox::isMatch(idx, diceVal))
 			break;
 
-		// should probably turn into helper function
+		printBoard(tmp);
+
 		int total{};
 		for (size_t j = 0; j < idx.size(); j++)
 		{
