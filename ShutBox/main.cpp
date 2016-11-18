@@ -73,6 +73,7 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 
 		idx.push_back(index);
 		tmp.at(index - 1) = false;
+		printBoard(tmp);
 
 		if (ShutBox::isMatch(idx, diceVal))
 			break;
