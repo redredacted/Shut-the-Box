@@ -1,5 +1,6 @@
 #include "ShutBox.h"
 
+// Shutbox Initializer takes callbacks as arguments and sets them to the private callback values
 ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt, UpdateDice& cbDiceUpdate) : board{true, true, true, true, true, true, true, true, true}
 {
 	cb_printBoardState = cbPrintBrd;
@@ -14,6 +15,7 @@ ShutBox::~ShutBox()
 {
 }
 
+// Main Event Loop of shutbox class executes the rest of logic
 int ShutBox::Start()
 {
 	ShutNum input{};
@@ -62,6 +64,7 @@ int ShutBox::Start()
 	return score;
 }
 
+// Function that determines if anything passed in as v can add up to sum, returns true if a subset of v equals num
 bool ShutBox::shouldContinue(ShutNum& v, int sum)
 {
 	// https://en.wikipedia.org/wiki/Subset_sum_problem
@@ -87,6 +90,7 @@ bool ShutBox::shouldContinue(ShutNum& v, int sum)
 	return dp[sum] ? true : false;
 }
 
+// Converts ShutBoard into ShutNum
 ShutNum ShutBox::boardToNum(ShutBoard& brd, bool invert)
 {
 	std::vector<int> numOut;
@@ -109,6 +113,7 @@ ShutNum ShutBox::boardToNum(ShutBoard& brd, bool invert)
 	return numOut;
 }
 
+// generates random numbers bewtween 1 - 6 and rolls diceToRoll times
 void ShutBox::rollDice(int diceToRoll)
 {
 	int tot{};
@@ -138,7 +143,7 @@ bool ShutBox::isMatch(ShutNum& choice, int diceVal)
 	return false;
 }
 
-
+// Calculates score
 int ShutBox::calcScore()
 {
 	int score{};
