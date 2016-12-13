@@ -4,6 +4,7 @@
 #include <functional>
 #include <random>
 
+// typedefs to make callbacks and containers easier to type
 typedef std::array<bool, 9> ShutBoard;
 typedef std::vector<int> ShutNum;
 typedef std::function<void(ShutBoard& brd)> DispBrdFn;
