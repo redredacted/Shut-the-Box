@@ -90,12 +90,14 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			idx.clear();
 			tmp = brd;
 			std::cout << "You entered a sequence of numbers greater than the value rolled on the dice" << std::endl;
+			printBoard(brd);
 		}
 		else if (total < diceVal && idx.size() >= 3)
 		{
 			idx.clear();
 			tmp = brd;
 			std::cout << "You entered a sequence of numbers that will add up to a value less than the rolled on the dice" << std::endl;
+			printBoard(brd);
 		}
 	}
 	return idx;
