@@ -6,11 +6,13 @@
 #include <algorithm>
 #include "ShutBox.h"
 
+// Callback to print diceVal
 void dicePrint(int diceVal)
 {
 	std::cout << "diceVal is " << diceVal << std::endl;
 }
 
+// Displays the board
 void printBoard(ShutBoard& brd)
 {
 	for (size_t i = 0; i < 9; i++)
@@ -27,6 +29,7 @@ void printBoard(ShutBoard& brd)
 	std::cout << std::endl;
 }
 
+// Gets and validates input
 ShutNum getInput(ShutBoard& brd, int diceVal)
 {
 	std::string input;
@@ -103,12 +106,15 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 	return idx;
 }
 
+// Displays a message when diceVal is matched by player
 void dispRound()
 {
 	std::cout << "diceVal was matched by player" << std::endl;
 	system("pause");
 }
 
+
+// prompts the user for amnt of dice to roll
 int getAmtOfDiceToRoll()
 {
 	std::string input;
@@ -129,16 +135,21 @@ int getAmtOfDiceToRoll()
 	return index;
 }
 
+// Main Loop
 int main()
 {
+	// catches any errors to stop crashes
 	try
 	{
+		// converts function to callbacks
 		DispBrdFn pb = printBoard;
 		InputFn gi = getInput;
 		DispRndFn dr = dispRound;
 		GetDiceAmt di = getAmtOfDiceToRoll;
 		UpdateDice dp = dicePrint;
+		// starts game | blocks
 		ShutBox round1(pb, gi, dr, di, dp);
+		// displays final score after loss / win
 		std::cout << "You Scored: " << round1.Start() << std::endl;
 	}
 	catch (const std::exception& ex)
