@@ -80,8 +80,6 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 		if (ShutBox::isMatch(idx, diceVal))
 			break;
 
-		printBoard(tmp);
-
 		int total{};
 		for (size_t j = 0; j < idx.size(); j++)
 		{
@@ -101,6 +99,10 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 			tmp = brd;
 			std::cout << "You entered a sequence of numbers that will add up to a value less than the rolled on the dice" << std::endl;
 			printBoard(brd);
+		} 
+		else
+		{
+			printBoard(tmp);
 		}
 	}
 	return idx;
