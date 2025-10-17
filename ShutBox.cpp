@@ -1,4 +1,5 @@
 #include "ShutBox.h"
+#include <cstring>
 
 // Shutbox Initializer takes callbacks as arguments and sets them to the private callback values
 ShutBox::ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt, UpdateDice& cbDiceUpdate) : board{true, true, true, true, true, true, true, true, true}
@@ -65,7 +66,7 @@ int ShutBox::Start()
 }
 
 // Function that determines if anything passed in as v can add up to sum, returns true if a subset of v equals num
-bool ShutBox::shouldContinue(ShutNum& v, int sum)
+bool ShutBox::shouldContinue(const ShutNum& v, int sum)
 {
 	// https://en.wikipedia.org/wiki/Subset_sum_problem
 	// http://www.cs.dartmouth.edu/~ac/Teach/CS105-Winter05/Notes/nanda-scribe-3.pdf
@@ -91,7 +92,7 @@ bool ShutBox::shouldContinue(ShutNum& v, int sum)
 }
 
 // Converts ShutBoard into ShutNum
-ShutNum ShutBox::boardToNum(ShutBoard& brd, bool invert)
+ShutNum ShutBox::boardToNum(const ShutBoard& brd, bool invert)
 {
 	std::vector<int> numOut;
 	numOut.reserve(9);
