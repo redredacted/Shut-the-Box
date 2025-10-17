@@ -6,6 +6,14 @@
 #include <algorithm>
 #include "ShutBox.h"
 
+
+void pause()
+{
+	std::cout << "Press Enter to continue...";
+	std::cin.get();
+}
+
+
 // Callback to print diceVal
 void dicePrint(int diceVal)
 {
@@ -69,7 +77,7 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 				std::cout << "Input must be bewtween 1 and 9" << std::endl;;
 			}
 
-			system("pause");
+		        pause();
 			printBoard(tmp);
 			dicePrint(diceVal);
 		}
@@ -112,7 +120,7 @@ ShutNum getInput(ShutBoard& brd, int diceVal)
 void dispRound()
 {
 	std::cout << "diceVal was matched by player" << std::endl;
-	system("pause");
+	pause();
 }
 
 
@@ -159,6 +167,5 @@ int main()
 		std::cout << "The program says: " << ex.what() << std::endl;
 	}
 
-	system("pause");
 	return 0;
 }

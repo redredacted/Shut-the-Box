@@ -1,4 +1,4 @@
-CXX = clang++
+CXX ?= clang++
 CXXFLAGS = -std=c++11 -Wall -Wextra -O2
 
 SRCS = main.cpp ShutBox.cpp
