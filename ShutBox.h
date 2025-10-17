@@ -19,7 +19,7 @@ public:
 	ShutBox(DispBrdFn& cbPrintBrd, InputFn& cbGetInput, DispRndFn& cbDispRnd, GetDiceAmt& cbGetDiceAmt, UpdateDice& cbDiceUpdate);
 	~ShutBox();
 	int Start();
-	static ShutNum boardToNum(ShutBoard& brd, bool invert);
+	static ShutNum boardToNum(const ShutBoard& brd, bool invert);
 	static bool isMatch(ShutNum& choice, int diceVal);
 private:
 	int diceResult;
@@ -32,7 +32,7 @@ private:
 	GetDiceAmt cb_GetDiceAmt;
 	UpdateDice cb_DiceUpdate;
 	void rollDice(int diceToRoll);
-	bool shouldContinue(ShutNum& v, int sum);
+	bool shouldContinue(const ShutNum& v, int sum);
 	int calcScore();
 };
 
